@@ -1,0 +1,2 @@
+# discretehopfield
+COMP380
