@@ -2,6 +2,7 @@
   <dictionary name="Elijah">
     <words>
       <w>hopfield</w>
+      <w>readline</w>
     </words>
   </dictionary>
 </component>
