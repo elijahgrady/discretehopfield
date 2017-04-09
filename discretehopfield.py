@@ -120,8 +120,24 @@ def transpose_matrices(matrixcontainer):
     # RETURN WEIGHT MATRIX
     return transposed_container
 
+
 def add_matrices(c, d):
     return [[a+b for a, b in izip(row1, row2)] for row1, row2 in izip(c, d)]
+
+
+def no_self_connections(weight_matrix):
+    # SET DIAGONALS TO ZERO
+    count = weight_matrix.__len__()
+    count2 = weight_matrix[0].__len__()
+    for x in range(0, count):
+        for x in range(0, count2):
+            # SET DIAGONALS TO ZERO HERE
+            weight_matrix[count2][count2] == 0
+    return weight_matrix
+
+def converged():
+    # IF NO CHANGE OR MAX EPOCHS
+    return False
 
 
 def main():
@@ -129,7 +145,10 @@ def main():
     if (ttflag() == '1'):
         matrixcontainer = training()
         transposedcontainer = transpose_matrices(matrixcontainer)
+        # THE FOLLOWING LINE NEEDS TO BE LOOPED
         weight_matrix = add_matrices(transposedcontainer, matrixcontainer)
+        weight_matrix = no_self_connections(weight_matrix)
+
     # TESTING
     else:
         matrixcontainer = testing()
@@ -140,13 +159,6 @@ if __name__ == '__main__':
 
 
 
-'''
-Training Hopfield Auto Net
-Hebb rule,
-for a given set of patterns {s1, s2, …, sp} in bipolar,
-weight matrix = s1T s1 + s2T s2 + … + spT sp
-wii = O diagonals
-'''
 
 
 
