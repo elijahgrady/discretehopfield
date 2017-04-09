@@ -5,6 +5,7 @@ import operator
 import sys
 import unittest
 import math
+from itertools import izip
 
 """
 Discrete Hopfield Auto Net
@@ -36,9 +37,9 @@ def readFile(filename):
     # THE NEXT LINE IN THE FILE NEEDS TO BE READ IN AS THE OUTPUT DIMENSIONS
     output_dim = [int(s) for s in f.readline().split() if s.isdigit()]
     # INIT DATA MEMORY AS A SIMPLE LIST
-    matrixline = []
-    matrixbody = []
-    matrixcontainer = []
+    matrixline = list()
+    matrixbody = list()
+    matrixcontainer = list()
     # WHILE READLINE WILL PARSE THROUGH ALL THE REST OFF THE LINES IN THE FILE
     f.readline()
     for x in range (0, output_dim[0]):
@@ -75,8 +76,6 @@ def training():
     else:
         in_file = None
     training_data = readFile(in_file)
-    print(training_data)
-    print len(training_data)
     return training_data
 
 
@@ -100,7 +99,7 @@ def transpose(matrix):
 ...     transposed.append(transposed_row)
     """
     # SIMPLE ZIP AND UNPACK
-    return list(zip(*matrix))
+    return zip(*matrix)
 
 
 def transpose_matrices(matrixcontainer):
@@ -110,24 +109,30 @@ def transpose_matrices(matrixcontainer):
     # CONTAINER FOR THE TRANSPOSED MATRICES
     transposed_container = list()
     # LOOP FOR CONTAINER.LEN
-    for x in range(0, count):
+    for z in range(0, count):
         # FEED THE TRANSPOSE FUNCTION AND APPEND TO CONTAINER
-        transposed_container.append(transpose(matrixcontainer[count]))
-    # ADD THEM ALL TOGETHER
+        args = matrixcontainer[z]
+        print (args)
+        print ('\n')
+        print zip(*args)
+        print ("new")
+
     # RETURN WEIGHT MATRIX
     return transposed_container
 
+def add_matrices(c, d):
+    return [[a+b for a, b in izip(row1, row2)] for row1, row2 in izip(c, d)]
+
 
 def main():
+    # TRAINING
     if (ttflag() == '1'):
         matrixcontainer = training()
         transposedcontainer = transpose_matrices(matrixcontainer)
-        weight_matrix = transposedcontainer + matrixcontainer
+        weight_matrix = add_matrices(transposedcontainer, matrixcontainer)
+    # TESTING
     else:
         matrixcontainer = testing()
-
-
-
 
 
 if __name__ == '__main__':
