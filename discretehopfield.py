@@ -87,6 +87,9 @@ def ttflag():
     ttflag = raw_input("whats hoppin? enter 1 to train, anything else to test : ")
     return ttflag
 
+def epochs():
+    epochs = raw_input("whats hopping? enter the max number of epochs : ")
+    return epochs()
 
 def transpose(matrix):
     """
@@ -106,17 +109,14 @@ def transpose_matrices(matrixcontainer):
     # INIT RETURN VAR
     # NUMBER TO INIT
     count = matrixcontainer.__len__()
+    count2 = matrixcontainer[0].__len__()
     # CONTAINER FOR THE TRANSPOSED MATRICES
-    transposed_container = list()
+    transposed_container = [[[]]]
     # LOOP FOR CONTAINER.LEN
     for z in range(0, count):
-        # FEED THE TRANSPOSE FUNCTION AND APPEND TO CONTAINER
-        args = matrixcontainer[z]
-        print (args)
-        print ('\n')
-        print zip(*args)
-        print ("new")
-
+        for i in range(0, count2):
+            for j in range(0, count2):
+                # PERFORM THE TRANSPOSE> NOT SURE WHAT TO DO HERE
     # RETURN WEIGHT MATRIX
     return transposed_container
 
@@ -128,11 +128,10 @@ def add_matrices(c, d):
 def no_self_connections(weight_matrix):
     # SET DIAGONALS TO ZERO
     count = weight_matrix.__len__()
-    count2 = weight_matrix[0].__len__()
     for x in range(0, count):
-        for x in range(0, count2):
+        for x in range(0, 10):
             # SET DIAGONALS TO ZERO HERE
-            weight_matrix[count2][count2] == 0
+            weight_matrix[x][x] == 0
     return weight_matrix
 
 def converged():
@@ -145,9 +144,12 @@ def main():
     if (ttflag() == '1'):
         matrixcontainer = training()
         transposedcontainer = transpose_matrices(matrixcontainer)
-        # THE FOLLOWING LINE NEEDS TO BE LOOPED
+        print (matrixcontainer)
+        print (transposedcontainer)
+        '''
         weight_matrix = add_matrices(transposedcontainer, matrixcontainer)
         weight_matrix = no_self_connections(weight_matrix)
+        '''
 
     # TESTING
     else:
