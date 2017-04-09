@@ -111,12 +111,13 @@ def transpose_matrices(matrixcontainer):
     count = matrixcontainer.__len__()
     count2 = matrixcontainer[0].__len__()
     # CONTAINER FOR THE TRANSPOSED MATRICES
-    transposed_container = [[[]]]
+    transposed_container = matrixcontainer[:]
     # LOOP FOR CONTAINER.LEN
     for z in range(0, count):
         for i in range(0, count2):
             for j in range(0, count2):
                 # PERFORM THE TRANSPOSE> NOT SURE WHAT TO DO HERE
+                transposed_container[z][i][j] = matrixcontainer[z][j][i]
     # RETURN WEIGHT MATRIX
     return transposed_container
 
