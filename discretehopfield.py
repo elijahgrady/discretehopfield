@@ -28,10 +28,12 @@ DEBUG = True
 # INPUT PARAM: FILE PATH TO DATA
 # RETURN: LIST OF X*Z*Z [[[{-1,1}*]]]
 # FUNCTIONS PROPERLY FOR BOTH TRAINING AND TESTING
-def readFile(filename):
+def readFile(filename, option):
     # OPEN THE FILE
-    if DEBUG:
-        f = open('train.txt','r')
+    if DEBUG & ~option:
+        f = open('train.txt', 'r')
+    elif DEBUG & option:
+        f = open('test.txt', 'r')
     else:
         f = open(filename, 'r')
     # THE FIRST LINE IS AN EMPTY LINE
@@ -78,18 +80,23 @@ def readFile(filename):
 def training():
     # CHECK FOR DEBUG OVERRIDE
     if not DEBUG:
-        in_file = raw_input("Enter training file filename:")
+        in_file = raw_input("waz hoppin ... enter training file :")
     else:
         in_file = None
     # INIT THE TRAINING DATA
-    training_data = readFile(in_file)
+    training_data = readFile(in_file, False)
     # SEND TRAINING DATA TO MAIN FOR WEIGHT MATRIX CONSTRUCTION
     return training_data
 
 
 def testing():
     # CHECK FOR DEBUG OVERRIDE
-    return None
+    if not DEBUG:
+        in_file = raw_input("waz hoppin ... enter testing file :")
+    else:
+        in_file = None
+    testing_data = readFile(in_file, True)
+    return testing_data
 
 
 def ttflag():
@@ -132,10 +139,22 @@ def converged():
     # IF NO CHANGE OR MAX EPOCHS
     return False
 
+# INPUT: YIN {int}*
+# OUTPUT: ACTIVATED Y {-1, 0, 1}*
+def activation(yin):
+    if yin < 0:
+        y = -1 # y = f(yin) = -1
+    if yin == 0:
+        y = yin # f(yin) = y
+    if yin > 0:
+        y = 1 # y = f(yin) = 1
+    return y
+
 
 def main():
     # TRAINING
-    if (ttflag() == '1'):
+    testortrain = ttflag()
+    if (testortrain == '1'):
         # READ IN THE INPUT FILE AND CONVERT TO BINARY
         matrixcontainer = training()
         # PROMPT THE USER FOR THE PATH TO SAVE THE WEIGHT MATRIX
@@ -199,8 +218,9 @@ def main():
         # TRAINING COMPLETE
 
     # TESTING
-    else:
-        matrixcontainer = testing()
+    elif testortrain == '2':
+        testingcontainer = testing()
+        print (testingcontainer)
         # PROMPT THE USER TO GIVE US THE FILE WHERE THE TRAINING DATA IS SAVED
         # PROMPT THE USER TO GIVE US THE FILE WHERE THE TESTING DATA IS SAVED
         # RETURN THE RESULTS OF THE TESTING
