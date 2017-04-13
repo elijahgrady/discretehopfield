@@ -2,7 +2,14 @@
   <dictionary name="Elijah">
     <words>
       <w>hopfield</w>
+      <w>looper</w>
+      <w>matrixbody</w>
+      <w>matrixcontainer</w>
+      <w>matrixline</w>
       <w>readline</w>
+      <w>transposedcontainer</w>
+      <w>weightmatrix</w>
+      <w>weightmatrixpath</w>
     </words>
   </dictionary>
 </component>
