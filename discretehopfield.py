@@ -1,25 +1,23 @@
 # coding=utf-8
-# alex cameron & eli grady
-# neural nets 2017 USD
 
-import random
-import operator
-import sys
-import unittest
-import math
+# alex cameron & eli grady
+# university of san diego 2017
+# discrete auto associative hopfield neural network
+
+from random import shuffle
 from itertools import *
 
 """
 Discrete Hopfield Auto Net
 A well-known iterative auto-associative net (1982)
-Features
-Activation function is discrete
-Symmetric weights,  wij = wji
-No self-connections,  wii = 0
-Asynchronous activation updating
-Only one neuron updates at a time and the update is broad-casted to all other neurons
-Continuously taking input signals x
-Guaranteed to converge in theory
+Features:
+    Activation function is discrete
+    Symmetric weights,  wij = wji
+    No self-connections,  wii = 0
+    Asynchronous activation updating
+    Only one neuron updates at a time and the update is broad-casted to all other neurons
+    Continuously taking input signals x
+    Guaranteed to converge in theory
 """
 
 # SAVES TIME TYPING
@@ -156,22 +154,48 @@ def read_weight_matrix(dimensions):
             testingweightmatrix[x][y] = int(f.readline())
     return testingweightmatrix
 
+def randomlist(dimensions):
+    # INIT RETURN LIST
+    returnlist = list()
+    # RETURN A LIST OF SIZE DIMENSIONS OF RANDOMLY ORDERED INTS
+    for x in range(dimensions):
+        returnlist.append(x)
+    # SHUFFLE THE INTS
+    shuffle(returnlist)
+    # RETURN THE OBJECT
+    return returnlist
 
-def converged():
-    # IF NO CHANGE
-    return False
+
+def converged(hopfieldnet, hopfieldnetcopy):
+    # IF EMPTY ASSUME NOT CONVERGED
+    flag = False
+    # CHECK FOR ANY DIFFERENCES
+    for x in range(hopfieldnet.neurons.__len__()):
+        if hopfieldnet.neurons[x] != hopfieldnetcopy.neurons[x]:
+            flag = True
+    # IF NO CHANGES TRUE
+    if flag:
+        return True
+    else:
+        return False
 
 class HopfieldNeuron:
-    def __init__(self):
-        pass
+    def __init__(self, y, yin, x, w):
+        self.y = 0
+        self.yin = 0
+        self.x = 0
+        self.w = 0
+
 
 class HopfieldNet:
-    def __init__(self):
-        pass
+    def __init__(self, neurons):
+        self.neurons = []
+
 
 # INPUT: YIN {int}*
 # OUTPUT: ACTIVATED Y {-1, 0, 1}*
 def activation(yin):
+    # BIPOLAR ACTIVATION WITH SPECIAL ZERO CASE
     if yin < 0:
         y = -1 # y = f(yin) = -1
     if yin == 0:
@@ -180,6 +204,7 @@ def activation(yin):
         y = 1 # y = f(yin) = 1
     return y
 
+
 def hopfield_testing_algorithm(testingcontainer, weightmatrix, maxepochs):
     # MAKE A COPY OF THE TESTING DATA TO MANIPULATE
     T = testingcontainer[:]
@@ -187,29 +212,70 @@ def hopfield_testing_algorithm(testingcontainer, weightmatrix, maxepochs):
     W = weightmatrix[:]
     # INIT A CURRENT EPOCH COUNTER FOR LOOPING
     thisepoch = 1
+    # INITIALIZE THE NET
+    hopfieldnet = HopfieldNet(None)
+    # INIT NET COPY
+    hopfieldnetcopy = HopfieldNet(None)
+    # INIT A NEURON
+    hopfieldneuron = HopfieldNeuron(0, 0, 0, 0)
     # RUN UNTIL MAX EPOCHS IS REACHED
-    while thisepoch <= maxepochs:
-        # OR IF CONVERGENCE IS REACHED
-        while converged() is not True:
-            # INCREMENT EPOCH COUNTER
-            thisepoch += 1
+
+    while converged(hopfieldnet, hopfieldnetcopy) is False:
+        # INCREMENT EPOCH COUNTER
+        thisepoch += 1
+        # FOR ALL TESTING SAMPLES
+        for x in range(0, T.__len__(), 1):
             # INITIALIZE THE NEURONS
-    """
-    2. for a given test pattern x do
-    3. { set yi = xi, i = 1, 2, … n
-       do step 4 (randomly for each neuron i)
-    4. yin_i = xi + [y1w1i + y2w2i +…+ ynwni]
-       yi = f (yin_i), i = 1, 2, … n
-       broadcast yi to all other neurons
-    5. If (no changes on activation) then converged else set xi = yi and goto step 3 }
+            for i in range(T[0].__len__()):
+                for j in range(T[0].__len__()):
+                    # SET Y EQUAL TO CORRESPONDING X
+                    hopfieldneuron.y = T[x][i][j]
+                    hopfieldneuron.x = T[x][i][j]
+                    hopfieldneuron.w = W[i][j]
+                    hopfieldneuron.yin = 0
+                    hopfieldnet.neurons.append(hopfieldneuron)
+            # RANDOMIZE THE ORDER IN WHICH NEURONS ARE VISITED
+            # THIS IS DONE VIA SHUFFLING THE LIST OF OBJECTS
+            randomintlist = randomlist((T[0].__len__()) * (T[0].__len__()))
+            # CREATE A COPY OF THE NETWORK TO CHECK FOR CHANGES IN CONVERGED
+            for z in hopfieldnet.neurons:
+                hopfieldnetcopy.neurons.append(z)
+            # FOR ALL NEURONS ASYNCHRONOUSLY
 
+            print ("statement should be reached 5 times per epoch")
 
-    """
+            activationflag = False
+            for zed in randomintlist:
+                # INIT YIN PLACEHOLDER
+                yinval = 0
+                for q in range(hopfieldnet.neurons.__len__()):
+                    yinval += hopfieldnet.neurons[q].y
+                    yinval += hopfieldnet.neurons[q].w
+                # CALCULATE YIN
+                hopfieldnet.neurons[zed].yin = (hopfieldnet.neurons[zed].x + yinval)
+                tempreg = 0
+                tempreg = hopfieldnet.neurons[zed].y
+                hopfieldnet.neurons[zed].y = activation(hopfieldnet.neurons[zed].yin)
+                if tempreg != hopfieldnet.neurons[zed].y:
+                    activationflag = True
+            if activationflag:
+                for i in range(T[0].__len__()):
+                    for j in range(T[0].__len__()):
+                        for z in hopfieldnet.neurons:
+                            T[x][i][j] = z.y
+        if thisepoch > maxepochs:
+            break
+
+            # CONVERGENCE LOOPING DONE VIA LOOP CONSTRUCTION
+        # EPOCH LOOPING DONE VIA LOOP CONSTRUCTION
+    # IF WE REACH THIS LINE THEN THE TESTING IS COMPLETE AND T SHOULD BE A LIST OF PATTERN MATRICES
+    # WE THEN NEED TO PROMPT THE USER WHERE TO SAVE THE RESULTS AND THEN NEED TO SAVE THEM
+    # IS IT OKAY TO PRINT THE RESULTS IN A DIFFERENT WAY THAN THE INPUT BECAUSE WE HAVE FREEDOM TO BE CREATIVE?
+
     return T
 
 
 def main():
-    print ("\n")
     # TRAINING
     testortrain = ttflag()
     while testortrain == '1' :
@@ -244,7 +310,7 @@ def main():
 
         testmatrix = transpose_matrices(testmatrix)
 
-        print (" THIS PROVES THE TRANSPOSE METHOD WORKS")
+        print ("THIS PROVES THE TRANSPOSE METHOD WORKS")
 
         print(testmatrix)
 
@@ -292,7 +358,8 @@ def main():
         # FEED ALL THE DATA TO THE TESTING ALGORITHM
         patterns = hopfield_testing_algorithm(testingcontainer, testingweightmatrix, maxepochs)
         # SAVE RESULTS AND OUTPUT TO FILE
-        print ("Tested")
+        print ("Testing complete. Here are the results of your testing: ")
+        print (patterns)
         savetestingresults(patterns)
         # PROMPT USER FOR LOOP
         testortrain = ttflag()
