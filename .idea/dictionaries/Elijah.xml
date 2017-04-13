@@ -6,7 +6,11 @@
       <w>matrixbody</w>
       <w>matrixcontainer</w>
       <w>matrixline</w>
+      <w>maxepochs</w>
       <w>readline</w>
+      <w>testingcontainer</w>
+      <w>testortrain</w>
+      <w>thisepoch</w>
       <w>transposedcontainer</w>
       <w>weightmatrix</w>
       <w>weightmatrixpath</w>
